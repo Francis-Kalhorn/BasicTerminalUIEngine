@@ -1,11 +1,31 @@
 #include <iostream>
 #include <tuple>
 #include <string>
+#include <utility>
 
-// #define createFString(name, args) FString<args> name(args)
+namespace ops {
+
+	template<typename T, int... Is>
+	void forEach(T&& t, std::integer_sequence<int, Is...>) {
+		auto l = { (std::cout << std::get<Is>(t) << " ", 0)... };
+	}
+
+	template<typename... Ts>
+	static void fprint(std::tuple<Ts...> const& t) {
+		forEach(t, std::make_integer_sequence<int, sizeof...(Ts)>());
+	}
+
+}
 
 template<typename... M_Args>
 struct FString {
+public: // static methods
+
+	template<typename... Args>
+	static void fprint(std::tuple<Args...> Tu) {
+		forEachInTuple(Tu);
+		std::cout << std::endl;
+	}
 public: // non static public methods and variables
 
 	std::tuple<M_Args...> fstring;
@@ -15,31 +35,6 @@ public: // non static public methods and variables
 	}
 
 	void printS() {
-		FString_OPS::fprint(fstring);
-	}
-};
-
-struct FString_OPS {
-public: // static methods
-
-	template<typename... Args>
-	static auto createFString(Args... args) {
-		FString<Args...> fstring(args);
-		return Args...;
-	}
-
-	static void fprint() {
-		std::cout << std::endl;
-	}
-
-	template<typename F, typename... Args>
-	static void fprint(F firstArg, Args... remainingArgs) {
-		std::cout << firstArg << " ";
-		fprint(remainingArgs...);
-	}
-
-	template<typename Tuple, std::size_t... Is>
-	static void fprint(Tuple&& t, std::index_sequence<Is...>) {
-		((std::cout << std::get<Is>(t) << " ")...);
+		ops::fprint(fstring);
 	}
 };

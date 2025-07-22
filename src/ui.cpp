@@ -11,7 +11,7 @@ private: // general methods
 	int getIntInputBetween(int minNum, int maxNum, Args... question) {
 		std::string userIn;
 		while (true) {
-			std::cin << userIn
+			std::cin >> userIn;
 		}
 	}
 private: // step methods
